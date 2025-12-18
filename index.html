@@ -7,52 +7,66 @@
 
   <style>
     :root {
-      --bg-color: #0b0f1a;
-      --card-bg: rgba(255, 255, 255, 0.06);
+      --bg: #0b0f1a;
+      --card: rgba(255, 255, 255, 0.08);
+      --border: rgba(255, 255, 255, 0.15);
       --text-main: #ffffff;
-      --text-muted: #b5b8c5;
+      --text-muted: #b8bedc;
       --accent: #5da9ff;
-      --border: rgba(255, 255, 255, 0.12);
     }
 
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
-        Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", Arial,
-        "Noto Sans", sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", Roboto, sans-serif;
     }
 
     body {
-      background: radial-gradient(circle at top, #121a33, var(--bg-color));
+      background: radial-gradient(circle at top, #141c3a, var(--bg));
       color: var(--text-main);
-      line-height: 1.6;
+      overflow-x: hidden;
     }
 
-    header {
-      padding: 80px 20px 60px;
+    /* ===== Hero ===== */
+    .hero {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       text-align: center;
+      animation: fadeUp 1.2s ease forwards;
     }
 
-    header h1 {
-      font-size: 3rem;
+    .hero h1 {
+      font-size: 3.5rem;
       margin-bottom: 10px;
     }
 
-    header p {
-      font-size: 1.2rem;
+    .hero p {
+      font-size: 1.4rem;
       color: var(--text-muted);
     }
 
+    /* ===== Layout ===== */
     .container {
       max-width: 1100px;
-      margin: 0 auto;
-      padding: 0 20px 80px;
+      margin: auto;
+      padding: 80px 20px;
     }
 
     section {
-      margin-top: 60px;
+      margin-bottom: 80px;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s ease;
+    }
+
+    section.show {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     h2 {
@@ -66,6 +80,7 @@
       max-width: 800px;
     }
 
+    /* ===== Cards ===== */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -74,120 +89,207 @@
     }
 
     .card {
-      background: var(--card-bg);
+      background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 24px;
-      backdrop-filter: blur(10px);
-      transition: transform 0.2s ease, border-color 0.2s ease;
+      border-radius: 18px;
+      padding: 26px;
+      backdrop-filter: blur(12px);
+      transition: all 0.3s ease;
+      animation: popIn 0.8s ease forwards;
     }
 
     .card:hover {
-      transform: translateY(-6px);
+      transform: translateY(-10px) scale(1.02);
       border-color: var(--accent);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
     }
 
     .card h3 {
       margin-bottom: 10px;
       font-size: 1.2rem;
-      color: #ffffff;
     }
 
+    /* ===== Button ===== */
+    .btn {
+      margin-top: 30px;
+      padding: 14px 28px;
+      border-radius: 30px;
+      background: linear-gradient(135deg, #5da9ff, #8ecbff);
+      color: #000;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
+    }
+
+    /* ===== Modal ===== */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal.active {
+      display: flex;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .modal-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 30px;
+      width: 90%;
+      max-width: 420px;
+      text-align: center;
+      animation: zoomIn 0.4s ease;
+    }
+
+    /* ===== Footer ===== */
     footer {
       border-top: 1px solid var(--border);
-      padding: 30px 20px;
+      padding: 30px;
       text-align: center;
       color: var(--text-muted);
     }
 
-    footer span {
-      color: var(--accent);
+    /* ===== Animations ===== */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes popIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes zoomIn {
+      from {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
     }
   </style>
 </head>
 
 <body>
 
-  <header>
+  <!-- Hero -->
+  <div class="hero">
     <h1>Zore-Verify</h1>
     <p>Connect the World</p>
-  </header>
+    <button class="btn" onclick="openModal()">Contact Us</button>
+  </div>
 
-  <main class="container">
+  <!-- Content -->
+  <div class="container">
 
     <section>
-      <h2>About Zore-Verify</h2>
+      <h2>About</h2>
       <p>
-        Zore-Verify is a next-generation verification service designed for modern
-        applications. We focus on global connectivity, flexibility, and high
-        performance to help developers build secure and scalable systems.
+        Zore-Verify is a next-generation verification service focused on global
+        connectivity, high performance, and full customization for modern
+        applications.
       </p>
     </section>
 
     <section>
-      <h2>Key Features</h2>
-
+      <h2>Features</h2>
       <div class="grid">
-
         <div class="card">
-          <h3>🌐 Global Server Deployment</h3>
-          <p>
-            Deploy your services worldwide with optimized performance and low
-            latency. Zore-Verify supports multiple global regions to ensure
-            stable and fast connections.
-          </p>
+          <h3>🌐 Global Deployment</h3>
+          <p>Optimized servers worldwide with low latency.</p>
         </div>
-
         <div class="card">
-          <h3>⚙️ Highly Customizable Servers</h3>
-          <p>
-            Our servers can be fully customized based on your needs, including
-            architecture, logic, and resource allocation.
-          </p>
+          <h3>⚙️ Custom Servers</h3>
+          <p>Fully customizable infrastructure and logic.</p>
         </div>
-
         <div class="card">
-          <h3>📍 Multiple Server Regions</h3>
-          <p>
-            Available regions include Mainland China, Japan, the United States,
-            and other global servers upon request.
-          </p>
+          <h3>📍 Multiple Regions</h3>
+          <p>China, Japan, United States, and more.</p>
         </div>
-
         <div class="card">
-          <h3>🔐 Java Verification Excellence</h3>
-          <p>
-            Zore-Verify provides powerful and reliable verification services
-            specifically optimized for Java applications.
-          </p>
+          <h3>🔐 Java Verification</h3>
+          <p>Powerful and secure verification for Java apps.</p>
         </div>
-
         <div class="card">
-          <h3>🚀 Innovative & Diverse Functions</h3>
-          <p>
-            We continuously introduce innovative and diverse features to meet
-            evolving technical and security requirements.
-          </p>
+          <h3>🚀 Innovation</h3>
+          <p>Diverse and evolving verification features.</p>
         </div>
-
       </div>
     </section>
 
-    <section>
-      <h2>Contact</h2>
-      <p>
-        For business inquiries, custom solutions, or technical support, please
-        contact us via email:
-        <br /><br />
-        <strong>📧 zoreteam@outlook.com</strong>
-      </p>
-    </section>
+  </div>
 
-  </main>
+  <!-- Modal -->
+  <div class="modal" id="modal">
+    <div class="modal-box">
+      <h3>Contact Zore-Verify</h3>
+      <p style="margin:15px 0;color:var(--text-muted)">
+        Email us anytime:
+        <br /><br />
+        <strong>zoreteam@outlook.com</strong>
+      </p>
+      <button class="btn" onclick="closeModal()">Close</button>
+    </div>
+  </div>
 
   <footer>
-    © 2025 <span>Zore-Verify</span>. All rights reserved.
+    © 2025 Zore-Verify. All rights reserved.
   </footer>
+
+  <script>
+    // Scroll reveal
+    const sections = document.querySelectorAll("section");
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("show");
+        }
+      });
+    }, { threshold: 0.2 });
+
+    sections.forEach(sec => observer.observe(sec));
+
+    // Modal
+    function openModal() {
+      document.getElementById("modal").classList.add("active");
+    }
+
+    function closeModal() {
+      document.getElementById("modal").classList.remove("active");
+    }
+  </script>
 
 </body>
 </html>
